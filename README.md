@@ -34,27 +34,23 @@ while True:
 c.close()
 
 server.py
-
 import socket
-
 s = socket.socket()
-s.bind(('localhost', 8000))
-s.listen(1)
-print("Server ready...")
-
-c, _ = s.accept()
+s.bind(('localhost',8002))
+s.listen(5)
+c, addr = s.accept()
+ListSize = int(input("Enter the number of frames to send : "))
+List = list(range(ListSize))
+WindowSize = int(input("Enter Window Size : "))
+st, i = 0, 0
 while True:
-    msg = c.recv(1024).decode()
-    if not msg:
-        break
-    print("Received:", msg)
-    c.send(b"ACK")
-    if msg == "exit":
-        break
-
-c.close()
-s.close()
-
+    while(i < ListSize):
+        st += WindowSize
+        c.send(str(List[i:st]).encode())
+        Acknowledgment = c.recv(1024).decode()
+        if Acknowledgment:
+            print(Acknowledgment)
+            i+=st
 ## OUTPUT
 <img width="1902" height="1022" alt="Screenshot 2026-05-21 133857" src="https://github.com/user-attachments/assets/4da41a60-fdb9-4d9d-8976-06d522ce343a" />
 
